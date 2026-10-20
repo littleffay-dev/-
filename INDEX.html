@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-TW" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>時光留聲 | 1661–1662 鄭成功攻台與熱蘭遮城之戰</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        bgMain: '#F3EBDD',
+                        textMain: '#49372D',
+                        brandRed: '#A64B3C',
+                        brandGreen: '#858B76',
+                        cardBg: '#EAE0D0',
+                        paperWhite: '#FAF6EE',
+                    },
+                    fontFamily: {
+                        serifTC: ['"Noto Serif TC"', 'serif'],
+                        cinzel: ['"Cinzel"', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;900&family=Noto+Serif+TC:wght@400;600;700;900&display=swap" rel="stylesheet">
+    
+    <!-- Anime.js CDN (v3.2.1) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        :root {
+            --color-bg: #F3EBDD;
+            --color-text: #49372D;
+            --color-primary: #A64B3C;
+            --color-secondary: #858B76;
+        }
+
+        body {
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            font-family: 'Noto Serif TC', serif;
+            overflow-x: hidden;
+        }
+
+        .bg-texture {
+            background-image: radial-gradient(#49372D 0.55px, transparent 0.55px);
+            background-size: 28px 28px;
+            opacity: 0.05;
+        }
+
+        .vintage-frame {
+            border: 1px solid #C4B8A5;
+            padding: 16px;
+            background-color: #FAF6EE;
+            box-shadow: 0 10px 25px -5px rgba(73, 55, 45, 0.12);
+        }
+
+        .timeline-line {
+            background: linear-gradient(90deg, rgba(133,139,118,0.3) 0%, rgba(166,75,60,0.85) 50%, rgba(133,139,118,0.3) 100%);
+        }
+
+        @keyframes pulse-ring {
+            0% { transform: scale(0.95); opacity: 0.8; }
+            50% { transform: scale(1.3); opacity: 0.2; }
+            100% { transform: scale(0.95); opacity: 0.8; }
+        }
+
+        .pulse-hotspot {
+            animation: pulse-ring 2s infinite ease-in-out;
+        }
+
+        .perspective-1000 {
+            perspective: 1000px;
+        }
+        .transform-style-3d {
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .backface-hidden {
+            backface-visibility: hidden;
+        }
+        .rotate-y-180 {
+            transform: rotateY(180deg);
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #EAE0D0;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #A64B3C;
+            border-radius: 4px;
+        }
+
+        button:focus-visible, a:focus-visible {
+            outline: 2px solid #A64B3C;
+            outline-offset: 3px;
+        }
+
+        /* 專屬軍武跟隨準星 */
+        #weapon-cursor {
+            pointer-events: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+            transition: opacity 0.2s ease, transform 0.05s linear;
+        }
+
+        .weapon-crosshair {
+            filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.3));
+        }
+
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            border-radius: 50%;
+            z-index: 9998;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen">
+    <!-- 動態游標軍武懸浮視角 -->
+    <div id="weapon-cursor" class="hidden md:block opacity-0">
+        <svg id="weapon-svg" class="w-14 h-14 weapon-crosshair" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="50" cy="50" r="38" stroke="#A64B3C" stroke-width="1.5" stroke-dasharray="4 2"/>
+            <circle cx="50" cy="50" r="20" stroke="#A64B3C" stroke-width="1"/>
+            <circle cx="50" cy="50" r="3" fill="#A64B3C"/>
+            <line x1="50" y1="8" x2="50" y2="24" stroke="#A64B3C" stroke-width="2"/>
+            <line x1="50" y1="76" x2="50" y2="92" stroke="#A64B3C" stroke-width="2"/>
+            <line x1="8" y1="50" x2="24" y2="50" stroke="#A64B3C" stroke-width="2"/>
+            <line x1="76" y1="50" x2="92" y2="50" stroke="#A64B3C" stroke-width="2"/>
+        </svg>
+    </div>
+
+    <div class="fixed inset-0 bg-texture pointer-events-none z-50"></div>
+
+    <!-- 頁頭導覽列 -->
+    <header class="w-full py-4 px-6 md:px-12 border-b border-[#D8CCB9] flex justify-between items-center sticky top-0 bg-[#F3EBDD]/90 backdrop-blur-md z-40 transition-all duration-300">
+        <div class="flex items-center space-x-3">
+            <span class="font-cinzel tracking-widest text-lg md:text-xl font-extrabold text-[#A64B3C]">CHRONO ECHO</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-[#858B76]/20 text-[#49372D] font-bold">時光留聲</span>
+        </div>
+        
+        <nav class="hidden lg:flex space-x-8 text-sm font-semibold tracking-wider">
+            <a href="#hero" class="hover:text-[#A64B3C] transition-colors">首頁</a>
+            <a href="#simulator" class="hover:text-[#A64B3C] transition-colors">動態沙盤</a>
+            <a href="#factions" class="hover:text-[#A64B3C] transition-colors">雙方陣營</a>
+            <a href="#units" class="hover:text-[#A64B3C] transition-colors">主力兵種</a>
+            <a href="#timeline" class="hover:text-[#A64B3C] transition-colors">互動時間軸</a>
+            <a href="#locations" class="hover:text-[#A64B3C] transition-colors">戰役據點</a>
+        </nav>
+
+        <div class="flex items-center space-x-3">
+            <button id="sound-toggle-btn" class="p-2 rounded border border-[#49372D]/20 hover:bg-[#EAE0D0] transition-colors text-xs flex items-center space-x-1" title="開啟/關閉互動音效">
+                <i data-lucide="volume-2" id="sound-icon" class="w-4 h-4 text-[#A64B3C]"></i>
+                <span id="sound-text" class="hidden sm:inline text-[11px] font-bold">音效: 開</span>
+            </button>
+
+            <button id="weapon-toggle-btn" class="p-2 rounded border border-[#49372D]/20 hover:bg-[#EAE0D0] transition-colors text-xs flex items-center space-x-1" title="切換軍武準星風格">
+                <i data-lucide="crosshair" class="w-4 h-4 text-[#A64B3C]"></i>
+                <span id="weapon-btn-text" class="hidden sm:inline text-[11px] font-bold">準星: 明鄭鳥銃</span>
+            </button>
+
+            <a href="#simulator" class="px-4 py-2 bg-[#A64B3C] text-[#FAF6EE] text-xs font-bold rounded hover:bg-[#8B3D30] transition-colors shadow">
+                進入戰局沙盤
+            </a>
+        </div>
+    </header>
+
+    <main id="main-content">
+        <!-- 1. 首屏 Hero Section -->
+        <section id="hero" class="min-h-[90vh] flex flex-col justify-center items-center px-6 text-center relative overflow-hidden py-16">
+            <div class="max-w-4xl mx-auto space-y-6 relative z-10 hero-el">
+                <div class="inline-flex items-center space-x-2 border-y border-[#A64B3C] py-1 px-4 text-xs md:text-sm font-bold tracking-widest text-[#A64B3C] uppercase">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                    <span>1661–1662 東亞海域關鍵紀錄</span>
+                </div>
+                
+                <h1 class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-black leading-tight text-[#49372D] tracking-wide">
+                    1661：一場改變台灣歷史的<br class="hidden sm:inline"><span class="text-[#A64B3C] inline-block mt-2">圍城戰</span>
+                </h1>
+
+                <p class="text-base sm:text-lg md:text-xl text-[#49372D]/90 max-w-2xl mx-auto font-normal leading-relaxed">
+                    九個月的嚴密對峙，兩股勢力的海陸交鋒，以及一座島嶼命運的關鍵轉折。
+                </p>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto my-8 pt-4 border-t border-b border-[#D8CCB9]/80 py-4">
+                    <div class="bg-[#FAF6EE]/80 p-3 rounded border border-[#D8CCB9]">
+                        <div class="text-2xl md:text-3xl font-black text-[#A64B3C] font-cinzel"><span class="counter-num" data-target="275">0</span><span class="text-sm">天</span></div>
+                        <div class="text-[11px] font-bold text-[#49372D]/70">圍城對峙天數</div>
+                    </div>
+                    <div class="bg-[#FAF6EE]/80 p-3 rounded border border-[#D8CCB9]">
+                        <div class="text-2xl md:text-3xl font-black text-[#A64B3C] font-cinzel"><span class="counter-num" data-target="25000">0</span><span class="text-sm">+</span></div>
+                        <div class="text-[11px] font-bold text-[#49372D]/70">鄭軍登陸兵力</div>
+                    </div>
+                    <div class="bg-[#FAF6EE]/80 p-3 rounded border border-[#D8CCB9]">
+                        <div class="text-2xl md:text-3xl font-black text-[#858B76] font-cinzel"><span class="counter-num" data-target="1500">0</span><span class="text-sm">人</span></div>
+                        <div class="text-[11px] font-bold text-[#49372D]/70">荷蘭守軍總數</div>
+                    </div>
+                    <div class="bg-[#FAF6EE]/80 p-3 rounded border border-[#D8CCB9]">
+                        <div class="text-2xl md:text-3xl font-black text-[#858B76] font-cinzel"><span class="counter-num" data-target="18">0</span><span class="text-sm">條</span></div>
+                        <div class="text-[11px] font-bold text-[#49372D]/70">和談開城條款</div>
+                    </div>
+                </div>
+
+                <div class="pt-2 flex flex-wrap justify-center items-center gap-4">
+                    <a href="#simulator" id="start-explore-btn" class="inline-flex items-center space-x-2 px-8 py-3.5 bg-[#A64B3C] text-[#FAF6EE] font-bold rounded hover:bg-[#8B3D30] transition-all transform hover:-translate-y-0.5 shadow-lg">
+                        <span>開啟動態戰局沙盤</span>
+                        <i data-lucide="play-circle" class="w-4 h-4"></i>
+                    </a>
+                    <a href="#factions" class="inline-flex items-center space-x-2 px-6 py-3.5 border border-[#49372D]/30 text-[#49372D] font-bold rounded hover:bg-[#EAE0D0] transition-colors">
+                        <span>查看陣營與兵種</span>
+                        <i data-lucide="users" class="w-4 h-4"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="absolute inset-0 z-0 opacity-10 pointer-events-none flex items-center justify-center">
+                <svg id="rotating-compass" class="w-[850px] h-[850px] text-[#49372D]" viewBox="0 0 200 200" fill="none" stroke="currentColor">
+                    <circle cx="100" cy="100" r="90" stroke-width="0.5" stroke-dasharray="2 2"/>
+                    <circle cx="100" cy="100" r="70" stroke-width="0.5"/>
+                    <path d="M100 10 L100 190 M10 L100 L190 100" stroke-width="0.5"/>
+                    <polygon points="100,20 105,95 100,90 95,95" fill="#A64B3C"/>
+                </svg>
+            </div>
+        </section>
+
+        <!-- 2. 動態互動模組：戰局動態演練沙盤 -->
+        <section id="simulator" class="py-20 px-4 sm:px-6 md:px-12 bg-[#EAE0D0]/60 border-t border-b border-[#D8CCB9] relative">
+            <div class="max-w-6xl mx-auto space-y-8">
+                <div class="text-center">
+                    <span class="text-xs md:text-sm font-bold tracking-widest text-[#858B76] uppercase">TACTICAL SIMULATOR</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 text-[#49372D]">1661–1662 動態沙盤推演</h2>
+                    <p class="text-xs md:text-sm text-[#49372D]/70 mt-2">點擊控制按鈕重現戰術推進、大潮突入與砲火網攻防</p>
+                    <div class="w-16 h-1 bg-[#A64B3C] mx-auto mt-4"></div>
+                </div>
+
+                <div class="vintage-frame bg-[#FAF6EE] p-6 rounded-lg relative overflow-hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center">
+                        <div class="lg:col-span-8 bg-[#EAE0D0] border border-[#C4B8A5] rounded h-[360px] md:h-[420px] relative overflow-hidden flex items-center justify-center">
+                            <svg id="sim-canvas" class="w-full h-full" viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M 0 0 L 600 0 L 600 400 L 0 400 Z" fill="#D2C4B1"/>
+                                <path d="M 50 0 C 150 100 120 280 0 350 L 0 0 Z" fill="#B3C2B6" opacity="0.8"/>
+                                <path d="M 120 50 C 180 120 160 250 100 380 C 140 350 200 220 160 80 Z" fill="#C9BBA7"/>
+
+                                <g font-size="10" font-weight="bold" fill="#49372D">
+                                    <text x="35" y="30">鹿耳門水道</text>
+                                    <text x="110" y="180">熱蘭遮城</text>
+                                    <text x="320" y="160">普羅民遮城 (赤崁)</text>
+                                    <text x="160" y="270">烏特勒支碉堡</text>
+                                </g>
+
+                                <circle id="sim-point-luermen" cx="60" cy="40" r="7" fill="#858B76" stroke="#FAF6EE" stroke-width="2"/>
+                                <circle id="sim-point-zeelandia" cx="130" cy="190" r="9" fill="#858B76" stroke="#FAF6EE" stroke-width="2"/>
+                                <circle id="sim-point-provintia" cx="350" cy="180" r="8" fill="#858B76" stroke="#FAF6EE" stroke-width="2"/>
+                                <circle id="sim-point-utrecht" cx="150" cy="250" r="6" fill="#858B76" stroke="#FAF6EE" stroke-width="2"/>
+
+                                <path id="sim-arrow-1" d="M 60 50 Q 200 60 330 170" stroke="#A64B3C" stroke-width="4" stroke-dasharray="8 4" fill="none" opacity="0"/>
+                                <path id="sim-arrow-2" d="M 330 190 Q 220 210 150 240" stroke="#A64B3C" stroke-width="4" stroke-dasharray="8 4" fill="none" opacity="0"/>
+                                <circle id="sim-cannon-fire" cx="150" cy="250" r="25" fill="#A64B3C" opacity="0"/>
+                            </svg>
+
+                            <div class="absolute bottom-4 left-4 bg-[#FAF6EE]/90 border border-[#A64B3C] p-3 rounded text-xs max-w-xs shadow">
+                                <span class="font-bold text-[#A64B3C]" id="sim-status-title">階段 1：大潮突襲鹿耳門</span>
+                                <p class="text-[11px] text-[#49372D]/80 mt-1" id="sim-status-desc">鄭軍數百艘戰艦繞過荷軍重砲防線，順大潮湧入台江內海。</p>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-4 space-y-4">
+                            <h3 class="text-xl font-bold text-[#49372D] flex items-center space-x-2">
+                                <i data-lucide="sliders" class="w-5 h-5 text-[#A64B3C]"></i>
+                                <span>推演戰局步驟</span>
+                            </h3>
+
+                            <div class="space-y-2" id="sim-step-buttons">
+                                <button data-step="0" class="sim-btn w-full text-left p-3 rounded border border-[#A64B3C] bg-[#A64B3C] text-white font-bold text-xs flex justify-between items-center transition-all">
+                                    <span>1. 鹿耳門大潮奇襲 (1661/04)</span>
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                                <button data-step="1" class="sim-btn w-full text-left p-3 rounded border border-[#D8CCB9] bg-[#FAF6EE] text-[#49372D] font-bold text-xs flex justify-between items-center hover:border-[#A64B3C] transition-all">
+                                    <span>2. 赤崁樓圍困開城 (1661/05)</span>
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                                <button data-step="2" class="sim-btn w-full text-left p-3 rounded border border-[#D8CCB9] bg-[#FAF6EE] text-[#49372D] font-bold text-xs flex justify-between items-center hover:border-[#A64B3C] transition-all">
+                                    <span>3. 台江海戰擊退援軍 (1661/09)</span>
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                                <button data-step="3" class="sim-btn w-full text-left p-3 rounded border border-[#D8CCB9] bg-[#FAF6EE] text-[#49372D] font-bold text-xs flex justify-between items-center hover:border-[#A64B3C] transition-all">
+                                    <span>4. 總攻烏特勒支碉堡 (1662/01)</span>
+                                    <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+
+                            <div class="p-3 bg-[#EAE0D0]/50 rounded text-xs text-[#49372D]/90 border-l-2 border-[#858B76]">
+                                💡 <strong>戰略備註：</strong> 熱蘭遮城為當時東亞最堅固之星形稜堡，鄭成功採取「以圍代攻，屯田持久」之策略，最終攻克高地決勝。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. 雙方陣營動態對比 -->
+        <section id="factions" class="py-20 px-6 md:px-12 bg-[#FAF6EE] relative">
+            <div class="max-w-6xl mx-auto space-y-10">
+                <div class="text-center">
+                    <span class="text-xs md:text-sm font-bold tracking-widest text-[#858B76] uppercase">FACTION COMPARISON</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 text-[#49372D]">兩大陣營：戰略與優劣勢對比</h2>
+                    <div class="w-16 h-1 bg-[#A64B3C] mx-auto mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="vintage-frame bg-[#EAE0D0]/40 p-6 rounded-lg space-y-4 hover:border-[#A64B3C] transition-all">
+                        <div class="flex items-center justify-between border-b border-[#D8CCB9] pb-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-[#A64B3C] text-white flex items-center justify-center font-bold">鄭</div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-[#A64B3C]">明鄭軍團 (Ming Loyalists)</h3>
+                                    <span class="text-xs text-[#858B76]">統帥：延平王 鄭成功</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 bg-[#A64B3C]/10 text-[#A64B3C] text-xs font-bold rounded">攻方</span>
+                        </div>
+
+                        <div class="space-y-3 text-xs md:text-sm text-[#49372D]/90">
+                            <div class="p-2.5 bg-[#FAF6EE] rounded border border-[#D8CCB9]">
+                                <strong>核心目標：</strong> 取得東寧（台灣）作為東山再起的屯田反清基地。
+                            </div>
+                            <div class="p-2.5 bg-[#FAF6EE] rounded border border-[#D8CCB9]">
+                                <strong>主力裝備：</strong> 福船艦隊、鐵人兵（重裝步兵）、藤牌兵與輕型火銃。
+                            </div>
+                            <div class="p-2.5 bg-[#FAF6EE] rounded border border-[#D8CCB9]">
+                                <strong>戰術策略：</strong> 趁潮過港突襲、強圍緩攻、派遣部隊至各地屯田解決糧荒。
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="vintage-frame bg-[#EAE0D0]/40 p-6 rounded-lg space-y-4 hover:border-[#858B76] transition-all">
+                        <div class="flex items-center justify-between border-b border-[#D8CCB9] pb-3">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-full bg-[#858B76] text-white flex items-center justify-center font-bold">荷</div>
+                                <div>
+                                    <h3 class="text-xl font-bold text-[#858B76]">荷蘭東印度公司 (VOC)</h3>
+                                    <span class="text-xs text-[#858B76]">統帥：台灣長官 揆一 (Frederik Coyett)</span>
+                                </div>
+                            </div>
+                            <span class="px-2.5 py-1 bg-[#858B76]/10 text-[#858B76] text-xs font-bold rounded">守方</span>
+                        </div>
+
+                        <div class="space-y-3 text-xs md:text-sm text-[#49372D]/90">
+                            <div class="p-2.5 bg-[#FAF6EE] rounded border border-[#D8CCB9]">
+                                <strong>核心目標：</strong> 保衛熱蘭遮城，維持荷蘭在東亞商業轉口港口壟斷地位。
+                            </div>
+                            <div class="p-2.5 bg-[#FAF6EE] rounded border border-[#D8CCB9]">
+                                <strong>主力裝備：</strong> 西洋蓋倫帆船、重型青銅火砲、稜堡十字交叉火網。
+                            </div>
+                            <div class="p-2.5 bg-[#FAF6EE] rounded border border-[#D8CCB9]">
+                                <strong>戰術策略：</strong> 依托堅固城堡死守、等待巴達維亞海上援軍與海路補給。
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. 主力兵種 3D 翻牌互動 -->
+        <section id="units" class="py-20 px-6 md:px-12 bg-[#EAE0D0]/40 border-t border-b border-[#D8CCB9]">
+            <div class="max-w-6xl mx-auto space-y-10">
+                <div class="text-center">
+                    <span class="text-xs md:text-sm font-bold tracking-widest text-[#858B76] uppercase">KEY MILITARY UNITS</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 text-[#49372D]">戰役關鍵兵種與載具</h2>
+                    <p class="text-xs md:text-sm text-[#49372D]/70 mt-2">點擊卡片翻轉，查看軍事參數與戰場角色</p>
+                    <div class="w-16 h-1 bg-[#A64B3C] mx-auto mt-4"></div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="unit-card perspective-1000 h-80 cursor-pointer">
+                        <div class="card-inner relative w-full h-full transform-style-3d shadow-md rounded-lg">
+                            <div class="card-front absolute inset-0 bg-[#FAF6EE] border border-[#D8CCB9] p-5 rounded-lg flex flex-col justify-between backface-hidden">
+                                <div>
+                                    <span class="text-[10px] bg-[#A64B3C]/10 text-[#A64B3C] px-2 py-0.5 rounded font-bold">明鄭重裝步兵</span>
+                                    <h3 class="text-xl font-bold text-[#A64B3C] mt-2">鐵人兵 (Armor Troops)</h3>
+                                    <p class="text-xs text-[#49372D]/80 mt-2 leading-relaxed">
+                                        鄭成功親自挑選的精銳特種部隊，身穿重型鐵鎧頭盔，刀槍不入。
+                                    </p>
+                                </div>
+                                <div class="text-center pt-3 border-t border-[#D8CCB9]/60 text-xs text-[#858B76] font-bold">
+                                    🔄 點擊查看詳細戰力值
+                                </div>
+                            </div>
+                            <div class="card-back absolute inset-0 bg-[#A64B3C] text-white p-5 rounded-lg flex flex-col justify-between rotate-y-180 backface-hidden">
+                                <div class="space-y-3">
+                                    <h4 class="font-bold border-b border-white/20 pb-1">戰鬥參數考據</h4>
+                                    <div class="text-xs space-y-1">
+                                        <p>🛡️ 防禦力：★★★★★（鐵甲護體）</p>
+                                        <p>⚔️ 近戰力：★★★★☆（斬馬刀/長槍）</p>
+                                        <p>🏃 機動力：★★☆☆☆（重裝受限）</p>
+                                    </div>
+                                    <p class="text-[11px] text-white/90 leading-tight">
+                                        在陸戰中擔任衝鋒陷陣重任，曾令荷蘭守軍發射的鳥銃子彈無法穿透。
+                                    </p>
+                                </div>
+                                <span class="text-[10px] text-white/70 text-center">🔄 點擊翻回正面</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="unit-card perspective-1000 h-80 cursor-pointer">
+                        <div class="card-inner relative w-full h-full transform-style-3d shadow-md rounded-lg">
+                            <div class="card-front absolute inset-0 bg-[#FAF6EE] border border-[#D8CCB9] p-5 rounded-lg flex flex-col justify-between backface-hidden">
+                                <div>
+                                    <span class="text-[10px] bg-[#A64B3C]/10 text-[#A64B3C] px-2 py-0.5 rounded font-bold">明鄭海軍旗艦</span>
+                                    <h3 class="text-xl font-bold text-[#A64B3C] mt-2">明鄭福船 (Foochow Vessel)</h3>
+                                    <p class="text-xs text-[#49372D]/80 mt-2 leading-relaxed">
+                                        吃水深、底尖上闊的中式遠洋主力戰船，搭載火砲與火繩槍手。
+                                    </p>
+                                </div>
+                                <div class="text-center pt-3 border-t border-[#D8CCB9]/60 text-xs text-[#858B76] font-bold">
+                                    🔄 點擊查看詳細戰力值
+                                </div>
+                            </div>
+                            <div class="card-back absolute inset-0 bg-[#A64B3C] text-white p-5 rounded-lg flex flex-col justify-between rotate-y-180 backface-hidden">
+                                <div class="space-y-3">
+                                    <h4 class="font-bold border-b border-white/20 pb-1">戰鬥參數考據</h4>
+                                    <div class="text-xs space-y-1">
+                                        <p>⛵ 淺灘吃水：★★★★☆（適應台江）</p>
+                                        <p>💥 艦砲威力：★★★☆☆（中型火砲）</p>
+                                        <p>👥 載兵量：★★★★★（數百名水兵）</p>
+                                    </div>
+                                    <p class="text-[11px] text-white/90 leading-tight">
+                                        利用數量優勢與靈活轉向能力，在淺水區包圍並壓制荷蘭蓋倫帆船。
+                                    </p>
+                                </div>
+                                <span class="text-[10px] text-white/70 text-center">🔄 點擊翻回正面</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="unit-card perspective-1000 h-80 cursor-pointer">
+                        <div class="card-inner relative w-full h-full transform-style-3d shadow-md rounded-lg">
+                            <div class="card-front absolute inset-0 bg-[#FAF6EE] border border-[#D8CCB9] p-5 rounded-lg flex flex-col justify-between backface-hidden">
+                                <div>
+                                    <span class="text-[10px] bg-[#858B76]/20 text-[#858B76] px-2 py-0.5 rounded font-bold">VOC 防禦精銳</span>
+                                    <h3 class="text-xl font-bold text-[#858B76] mt-2">稜堡砲手 (Artillery Crew)</h3>
+                                    <p class="text-xs text-[#49372D]/80 mt-2 leading-relaxed">
+                                        操作青銅與鐵製巨砲的歐洲專業砲兵，配合星形城堡設計射擊死角。
+                                    </p>
+                                </div>
+                                <div class="text-center pt-3 border-t border-[#D8CCB9]/60 text-xs text-[#858B76] font-bold">
+                                    🔄 點擊查看詳細戰力值
+                                </div>
+                            </div>
+                            <div class="card-back absolute inset-0 bg-[#858B76] text-white p-5 rounded-lg flex flex-col justify-between rotate-y-180 backface-hidden">
+                                <div class="space-y-3">
+                                    <h4 class="font-bold border-b border-white/20 pb-1">戰鬥參數考據</h4>
+                                    <div class="text-xs space-y-1">
+                                        <p>🎯 射擊精度：★★★★★（精準測距）</p>
+                                        <p>💥 火炮射程：★★★★★（長距離青銅砲）</p>
+                                        <p>🧱 陣地防禦：★★★★★（城堡掩體）</p>
+                                    </div>
+                                    <p class="text-[11px] text-white/90 leading-tight">
+                                        熱蘭遮城配備數十門重型加農砲，為鄭軍初期強攻造成大量傷亡。
+                                    </p>
+                                </div>
+                                <span class="text-[10px] text-white/70 text-center">🔄 點擊翻回正面</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="unit-card perspective-1000 h-80 cursor-pointer">
+                        <div class="card-inner relative w-full h-full transform-style-3d shadow-md rounded-lg">
+                            <div class="card-front absolute inset-0 bg-[#FAF6EE] border border-[#D8CCB9] p-5 rounded-lg flex flex-col justify-between backface-hidden">
+                                <div>
+                                    <span class="text-[10px] bg-[#858B76]/20 text-[#858B76] px-2 py-0.5 rounded font-bold">VOC 遠洋霸主</span>
+                                    <h3 class="text-xl font-bold text-[#858B76] mt-2">蓋倫帆船 (Galleon)</h3>
+                                    <p class="text-xs text-[#49372D]/80 mt-2 leading-relaxed">
+                                        配備重型兩側艦砲的西方遠洋戰艦，具有強大的火力的海戰堡壘。
+                                    </p>
+                                </div>
+                                <div class="text-center pt-3 border-t border-[#D8CCB9]/60 text-xs text-[#858B76] font-bold">
+                                    🔄 點擊查看詳細戰力值
+                                </div>
+                            </div>
+                            <div class="card-back absolute inset-0 bg-[#858B76] text-white p-5 rounded-lg flex flex-col justify-between rotate-y-180 backface-hidden">
+                                <div class="space-y-3">
+                                    <h4 class="font-bold border-b border-white/20 pb-1">戰鬥參數考據</h4>
+                                    <div class="text-xs space-y-1">
+                                        <p>💥 舷側火炮：★★★★★（重型火力）</p>
+                                        <p>🌊 風浪適應：★★★★★（遠洋強悍）</p>
+                                        <p>⚠️ 淺水限制：★☆☆☆☆（台江易擱淺）</p>
+                                    </div>
+                                    <p class="text-[11px] text-white/90 leading-tight">
+                                        如「赫克托號」(Hector)，雖然火力強大，但因吃水過深在台江淺灘動作受限。
+                                    </p>
+                                </div>
+                                <span class="text-[10px] text-white/70 text-center">🔄 點擊翻回正面</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. 核心功能：互動式歷史時間軸 -->
+        <section id="timeline" class="py-24 px-4 sm:px-6 md:px-12 relative max-w-7xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-xs md:text-sm font-bold tracking-widest text-[#858B76] uppercase">INTERACTIVE CHRONOLOGY</span>
+                <h2 class="text-3xl md:text-5xl font-bold mt-2 text-[#49372D]">圍城九月：關鍵四階段</h2>
+                <p class="text-xs md:text-sm text-[#49372D]/70 mt-2">點擊上方節點或切換按鈕，重演 1661–1662 年的圍城歷史細節</p>
+                <div class="w-16 h-1 bg-[#A64B3C] mx-auto mt-4"></div>
+            </div>
+
+            <div class="relative mb-10 px-2 sm:px-6">
+                <div class="absolute top-1/2 left-8 right-8 h-1 timeline-line -translate-y-1/2 z-0 hidden md:block"></div>
+                <div id="timeline-nodes-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 relative z-10" role="tablist">
+                </div>
+            </div>
+
+            <div class="vintage-frame max-w-5xl mx-auto relative p-6 md:p-10 bg-[#FAF6EE] rounded shadow-md">
+                <div id="stage-content-box" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[420px]">
+                    <div class="lg:col-span-5 relative group overflow-hidden rounded border border-[#D8CCB9] bg-[#EAE0D0] h-64 md:h-80 flex items-center justify-center">
+                        <div id="stage-image-container" class="w-full h-full">
+                        </div>
+                        <div id="stage-badge" class="absolute top-3 left-3 bg-[#A64B3C] text-[#FAF6EE] text-xs px-3 py-1 font-bold rounded shadow z-10">
+                            1661 年
+                        </div>
+                    </div>
+
+                    <div class="lg:col-span-7 space-y-4">
+                        <div class="flex items-center space-x-2 text-xs font-bold text-[#858B76] tracking-widest uppercase">
+                            <span id="stage-step-num">STAGE 01</span>
+                            <span>•</span>
+                            <span id="stage-date">1661年3–4月</span>
+                        </div>
+
+                        <h3 id="stage-title" class="text-2xl md:text-3xl font-bold text-[#49372D] leading-snug">
+                            載入中...
+                        </h3>
+
+                        <p id="stage-desc" class="text-sm md:text-base text-[#49372D]/90 leading-relaxed text-justify">
+                            歷史內容載入中...
+                        </p>
+
+                        <div class="bg-[#EAE0D0]/40 p-3 rounded border-l-2 border-[#858B76] text-xs text-[#49372D]/80">
+                            <strong>圖解說明：</strong> <span id="stage-img-caption">圖像說明載入中...</span>
+                        </div>
+
+                        <div class="pt-2">
+                            <button id="deep-dive-btn" aria-expanded="false" class="inline-flex items-center space-x-2 px-4 py-2 bg-[#858B76]/20 text-[#49372D] text-xs font-bold rounded hover:bg-[#858B76]/30 transition-colors">
+                                <i data-lucide="book-open" class="w-4 h-4"></i>
+                                <span>深入了解：補充知識與細節</span>
+                                <i data-lucide="chevron-down" id="deep-dive-icon" class="w-4 h-4 transition-transform duration-300"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="deep-dive-panel" class="hidden mt-6 pt-6 border-t border-[#D8CCB9] space-y-4 bg-[#EAE0D0]/30 p-6 rounded">
+                    <h4 class="text-sm font-bold text-[#A64B3C] flex items-center space-x-2">
+                        <i data-lucide="file-text" class="w-4 h-4"></i>
+                        <span>關鍵歷史考據與細節分析</span>
+                    </h4>
+                    <ul id="deep-dive-list" class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-[#49372D]/90">
+                    </ul>
+                </div>
+
+                <div class="flex justify-between items-center pt-8 mt-6 border-t border-[#D8CCB9]/80">
+                    <button id="prev-btn" class="flex items-center space-x-2 px-5 py-2.5 rounded border border-[#49372D]/30 text-[#49372D] hover:bg-[#A64B3C] hover:text-[#FAF6EE] hover:border-[#A64B3C] transition-all text-xs font-bold disabled:opacity-30 disabled:pointer-events-none">
+                        <i data-lucide="arrow-left" class="w-4 h-4"></i>
+                        <span>上一階段</span>
+                    </button>
+
+                    <div class="text-xs font-bold text-[#858B76]">
+                        <span id="current-index-display">1</span> / 4 階段
+                    </div>
+
+                    <button id="next-btn" class="flex items-center space-x-2 px-5 py-2.5 rounded border border-[#49372D]/30 text-[#49372D] hover:bg-[#A64B3C] hover:text-[#FAF6EE] hover:border-[#A64B3C] transition-all text-xs font-bold disabled:opacity-30 disabled:pointer-events-none">
+                        <span>下一階段</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. 延伸探索：戰役中的重要地點 (已優化排版) -->
+        <section id="locations" class="py-20 px-4 sm:px-6 md:px-12 bg-[#EAE0D0]/50 border-y border-[#D8CCB9]">
+            <div class="max-w-6xl mx-auto space-y-8">
+                <div class="text-center">
+                    <span class="text-xs md:text-sm font-bold tracking-widest text-[#858B76] uppercase">STRATEGIC MAP</span>
+                    <h2 class="text-3xl md:text-4xl font-bold mt-2 text-[#49372D]">戰役中的關鍵地理據點</h2>
+                    <p class="text-xs md:text-sm text-[#49372D]/70 mt-2">點擊以下地點標籤，探索歷史戰場地理角色</p>
+                    <div class="w-16 h-1 bg-[#A64B3C] mx-auto mt-4"></div>
+                </div>
+
+                <!-- 頁籤按鈕列表 -->
+                <div class="flex justify-center flex-wrap gap-2 sm:gap-4">
+                    <button class="loc-tab-btn px-4 py-2.5 rounded border text-xs sm:text-sm font-bold transition-all relative" data-loc="luermen">
+                        📍 鹿耳門（水道突破）
+                    </button>
+                    <button class="loc-tab-btn px-4 py-2.5 rounded border text-xs sm:text-sm font-bold transition-all relative" data-loc="provintia">
+                        📍 普羅民遮城（赤崁樓）
+                    </button>
+                    <button class="loc-tab-btn px-4 py-2.5 rounded border text-xs sm:text-sm font-bold transition-all relative" data-loc="zeelandia">
+                        📍 熱蘭遮城（安平古堡）
+                    </button>
+                </div>
+
+                <!-- 修正後的內容框：彈性比例與清晰層級 -->
+                <div class="vintage-frame max-w-4xl mx-auto bg-[#FAF6EE] p-4 sm:p-8 rounded-lg shadow-md">
+                    <div class="flex flex-col lg:flex-row items-stretch gap-6">
+                        <!-- 左側 SVG 圖片容器 -->
+                        <div class="w-full lg:w-1/2 relative min-h-[220px] sm:min-h-[260px] rounded border border-[#D8CCB9] overflow-hidden bg-[#EAE0D0] flex items-center justify-center shrink-0">
+                            <div id="loc-img-container" class="w-full h-full flex items-center justify-center">
+                            </div>
+                            <div class="absolute top-3 right-3 flex items-center space-x-1.5 bg-[#FAF6EE]/95 px-2.5 py-1 rounded text-[11px] font-bold text-[#A64B3C] border border-[#A64B3C]/30 shadow-sm">
+                                <span class="w-2 h-2 rounded-full bg-[#A64B3C] pulse-hotspot"></span>
+                                <span>即時戰場考據</span>
+                            </div>
+                        </div>
+
+                        <!-- 右側文案說明容器 -->
+                        <div class="w-full lg:w-1/2 flex flex-col justify-between space-y-4">
+                            <div class="space-y-3">
+                                <h3 id="loc-title" class="text-2xl font-bold text-[#A64B3C] leading-snug">載入中...</h3>
+                                <p id="loc-desc" class="text-xs sm:text-sm text-[#49372D]/90 leading-relaxed text-justify">
+                                    載入中...
+                                </p>
+                            </div>
+                            
+                            <div id="loc-role-box" class="p-3 bg-[#EAE0D0]/60 rounded text-xs text-[#49372D] border-l-4 border-[#A64B3C]">
+                                <strong>戰術角色：</strong> <span id="loc-role" class="font-medium">...</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#49372D] text-[#FAF6EE] py-12 px-6 border-t border-[#A64B3C]/40 text-xs">
+        <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8 border-b border-[#FAF6EE]/10 pb-8 mb-8">
+            <div class="space-y-3">
+                <h4 class="font-cinzel text-base font-bold text-[#A64B3C]">CHRONO ECHO 時光留聲</h4>
+                <p class="text-[#FAF6EE]/70 leading-relaxed">
+                    「九個月的對峙，兩股勢力的交鋒，以及一座島嶼的歷史轉折。」專注於呈現 1661–1662 年熱蘭遮城圍城戰役史實。
+                </p>
+            </div>
+
+            <div class="space-y-2 text-[#FAF6EE]/70">
+                <h5 class="font-bold text-[#FAF6EE] mb-2">【歷史資料來源與考據】</h5>
+                <p>1. 揆一著，《被遺誤的臺灣》（Coyett, *'t Verwaerloosde Formosa*）。</p>
+                <p>2. 江樹生譯註，《熱蘭遮城日誌》（Zeelandia Castle Journals）。</p>
+                <p>3. 國立臺灣歷史博物館 (NMTH) 展覽文獻與史料。</p>
+            </div>
+
+            <div class="space-y-2 text-[#FAF6EE]/70">
+                <h5 class="font-bold text-[#FAF6EE] mb-2">【圖檔與技術說明】</h5>
+                <p>• 動態效果由 Anime.js 驅動渲染。</p>
+                <p>• 歷史數據均經過嚴格史料對照考據。</p>
+                <a href="#hero" class="inline-flex items-center space-x-1 text-[#A64B3C] font-bold mt-2 hover:underline">
+                    <span>返回頁首 Top</span>
+                    <i data-lucide="arrow-up" class="w-3 h-3"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="max-w-6xl mx-auto text-center text-[#FAF6EE]/50">
+            &copy; 2026 時光留聲數位文史展覽專題. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        let currentIndex = 0;
+        let isAnimating = false;
+        let soundEnabled = true;
+        let weaponStyle = 0; // 0: 鳥銃準星, 1: 砲兵測距儀
+
+        // SVG 圖形資源庫
+        const vectorArtworks = {
+            fleet: `<svg class="w-full h-full p-4" viewBox="0 0 400 250" fill="none"><rect width="400" height="250" fill="#EAE0D0"/><g transform="translate(60, 40)"><path d="M20 120 C50 140 180 140 220 110 L200 140 C140 155 70 155 20 120 Z" fill="#A64B3C"/><line x1="80" y1="110" x2="80" y2="20" stroke="#49372D" stroke-width="4"/><path d="M82 25 Q130 35 82 85 Q125 90 82 105" fill="#FAF6EE" stroke="#A64B3C" stroke-width="2"/><polygon points="80,10 110,15 80,25" fill="#A64B3C"/><text x="85" y="21" font-size="8" fill="#FAF6EE" font-weight="bold">明</text></g></svg>`,
+            siege: `<svg class="w-full h-full p-4" viewBox="0 0 400 250" fill="none"><rect width="400" height="250" fill="#EAE0D0"/><g transform="translate(110, 50)"><polygon points="90,20 130,20 160,50 160,90 130,120 90,120 60,90 60,50" fill="#858B76" stroke="#49372D" stroke-width="2"/><circle cx="110" cy="70" r="10" fill="#49372D"/></g><circle cx="220" cy="120" r="85" stroke="#A64B3C" stroke-width="2" stroke-dasharray="6 4" fill="none"/></svg>`,
+            reinforcement: `<svg class="w-full h-full p-4" viewBox="0 0 400 250" fill="none"><rect width="400" height="250" fill="#EAE0D0"/><g transform="translate(100, 45)"><path d="M30 100 Q100 130 170 100 L160 125 Q100 145 20 125 Z" fill="#858B76"/><line x1="60" y1="100" x2="60" y2="20" stroke="#49372D" stroke-width="3"/><rect x="40" y="30" width="40" height="30" fill="#FAF6EE" stroke="#49372D"/><text x="113" y="14" font-size="7" fill="#FAF6EE" font-weight="bold">VOC</text></g></svg>`,
+            surrender: `<svg class="w-full h-full p-4" viewBox="0 0 400 250" fill="none"><rect width="400" height="250" fill="#FAF6EE"/><g transform="translate(100, 30)"><rect x="0" y="0" width="200" height="170" fill="#EAE0D0" stroke="#C4B8A5" stroke-width="3" rx="4"/><line x1="25" y1="30" x2="175" y2="30" stroke="#49372D" stroke-width="3"/><circle cx="60" cy="140" r="16" fill="#A64B3C"/><text x="50" y="144" font-size="10" fill="#FAF6EE" font-weight="bold">國姓</text></g></svg>`,
+            luermen: `<svg class="w-full h-full p-4" viewBox="0 0 300 200" fill="none"><rect width="300" height="200" fill="#EAE0D0"/><path d="M40 100 Q150 40 260 100" stroke="#A64B3C" stroke-width="4" stroke-dasharray="8 4" fill="none"/><circle cx="40" cy="100" r="5" fill="#A64B3C"/><circle cx="260" cy="100" r="5" fill="#858B76"/><text x="80" y="140" font-size="13" fill="#A64B3C" font-weight="bold">鹿耳門天潮暴漲水道</text></svg>`,
+            provintia: `<svg class="w-full h-full p-4" viewBox="0 0 300 200" fill="none"><rect width="300" height="200" fill="#EAE0D0"/><rect x="80" y="50" width="140" height="90" fill="#FAF6EE" stroke="#49372D" stroke-width="3" rx="2"/><path d="M70 50 L230 50 L150 20 Z" fill="#A64B3C"/><text x="95" y="110" font-size="12" fill="#49372D" font-weight="bold">普羅民遮城 (赤崁樓)</text></svg>`,
+            zeelandia: `<svg class="w-full h-full p-4" viewBox="0 0 300 200" fill="none"><rect width="300" height="200" fill="#EAE0D0"/><polygon points="150,20 240,70 210,170 90,170 60,70" fill="#858B76" stroke="#49372D" stroke-width="3"/><circle cx="150" cy="100" r="25" fill="#FAF6EE" stroke="#A64B3C" stroke-width="2"/><text x="105" y="104" font-size="11" fill="#A64B3C" font-weight="bold">熱蘭遮要塞</text></svg>`
+        };
+
+        const timelineData = [
+            {
+                year: '1661年 3–4月',
+                title: '第一階段：率軍渡海與突破台江',
+                badge: '1661 年 4 月',
+                stepNum: 'STAGE 01',
+                desc: '1661 年 3 月，鄭成功集結數百艘福船艦隊自金門料羅灣出發，經澎湖集結後攻向台灣。4 月 30 日趁大潮水位暴漲，出其不意地穿過荷軍認為無法通航的鹿耳門水道進入台江內海。鄭軍隨即順利登陸禾寮港，並迅速包圍防備較弱的普羅民遮城（赤崁樓），迫使荷蘭地方官貓難實町開城投降。',
+                caption: '鄭軍大艦隊突破鹿耳門險灘水道（示意考據圖）',
+                svgKey: 'fleet',
+                deepDives: [
+                    '<strong>天潮助陣考據：</strong> 鹿耳門水道平時水淺礁石密佈，鄭軍趁農曆三月大潮順水入港，出乎荷軍戰略預期。',
+                    '<strong>赤崁首捷：</strong> 普羅民遮城水源被切斷後僅數日即告投降，鄭軍成功建立首個陸上據點。',
+                    '<strong>兵力部署：</strong> 鄭軍首波登陸約 25,000 人，對比荷軍在台約 1,500 名兵員，形成極大兵力優勢。'
+                ]
+            },
+            {
+                year: '1661年 5–12月',
+                title: '第二階段：強攻未果與圍城封鎖',
+                badge: '1661 年 5 月',
+                stepNum: 'STAGE 02',
+                desc: '在攻下赤崁樓後，鄭軍轉向攻擊堅固的熱蘭遮城（今安平古堡）。由於熱蘭遮城為近代西式稜堡，配備交叉火網與重型青銅大砲，鄭軍數次強攻受挫、傷亡慘重。鄭成功隨即改變戰術，將強攻轉為「長期圍困」，同時下令軍隊至南北各地開墾屯田以解決糧食短缺問題。',
+                caption: '熱蘭遮城立體稜堡防禦與圍城封鎖線',
+                svgKey: 'siege',
+                deepDives: [
+                    '<strong>稜堡防禦優勢：</strong> 熱蘭遮城的四角凸出稜堡使守軍無射擊死角，大砲交叉火網發揮極大威力。',
+                    '<strong>屯田制度實施：</strong> 圍城期間糧草告罄，鄭成功實施「官兵屯田」，奠定台灣後續安朔、新營等地方地名由來。',
+                    '<strong>對峙僵局：</strong> 長達數月的圍城考驗著守軍的糧食儲備與攻軍的疾病耐受力。'
+                ]
+            },
+            {
+                year: '1661年下半年',
+                title: '第三階段：海上援軍與困局對峙',
+                badge: '1661 年 8 月',
+                stepNum: 'STAGE 03',
+                desc: '1661 年 8 月，巴達維亞（今雅加達）荷蘭東印度公司總部派遣卡烏（Cauw）艦隊支援台灣。然而援軍遭遇颱風受創，並在隨後的海戰中遭鄭軍海軍擊退。城內守軍糧盡彈絕、壞血病肆虐；鄭軍亦面臨嚴重瘧疾與糧食壓力，雙方陷入極度艱苦的耐力決戰。',
+                caption: '巴達維亞援軍艦隊遭遇颱風與海戰打擊',
+                svgKey: 'reinforcement',
+                deepDives: [
+                    '<strong>海戰對決：</strong> 荷軍派出蓋倫帆船試圖突破封鎖，但在台江內海淺灘受制於鄭軍靈活的小型戰船。',
+                    '<strong>城內危機：</strong> 熱蘭遮城內爆發嚴重壞血病與傳染病，荷方士兵與民眾死傷慘重、士氣崩潰。',
+                    '<strong>情報洩露：</strong> 荷軍日耳曼籍傭兵羅德斯（Radis）逃入鄭營，提供城內防務薄弱點關鍵情報。'
+                ]
+            },
+            {
+                year: '1662年 2月',
+                title: '第四階段：烏特勒支碉堡陷落與簽約投降',
+                badge: '1662 年 2 月',
+                stepNum: 'STAGE 04',
+                desc: '1662 年 1 月，鄭軍集中重砲轟擊熱蘭遮城後方的制高點「烏特勒支碉堡」（今安平國小旁山丘），並順利佔領。熱蘭遮城完全暴露於鄭軍砲火射程下。台灣長官揆一（Frederik Coyett）知大勢已去，於 2 月 1 日與鄭成功簽署 18 條締結條約，荷軍有尊嚴地撤離，結束在台 38 年統治。',
+                caption: '1662 年 2 月 1 日荷軍簽署和談條約離開台灣',
+                svgKey: 'surrender',
+                deepDives: [
+                    '<strong>和談條約條款：</strong> 條約規定荷軍可攜帶隨身財物、武器與旗幟有尊嚴地搭船離開台灣。',
+                    '<strong>揆一與《被遺誤的臺灣》：</strong> 揆一返回巴達維亞後遭懲處審判，後撰寫《被遺誤的臺灣》一書還原這段歷史。',
+                    '<strong>東寧政權開啟：</strong> 鄭成功隨後設東都承天府，開創漢人在台灣建立的第一個統治政權。'
+                ]
+            }
+        ];
+
+        const locationsData = {
+            luermen: {
+                title: '鹿耳門水道：天險突破點',
+                desc: '鹿耳門為昔日台江內海重要咽喉。水底暗礁交錯、航道狹窄。荷蘭人因其險要而未駐重兵，鄭成功利用大潮順利引領數百艘戰艦突入台江，奠定戰役首勝關鍵。',
+                role: '登陸作戰通道 / 戰略奇襲要衝',
+                svgKey: 'luermen'
+            },
+            provintia: {
+                title: '普羅民遮城（赤崁樓）：陸上樞紐',
+                desc: '荷蘭東印度公司於 1653 年建於赤崁的商業與市鎮據點。防禦力較熱蘭遮城弱，鄭軍登陸後迅速切斷其水源與補給線，貓難實町官員遂於圍城數日內投降。',
+                role: '行政與補給中心 / 鄭軍戰術基點',
+                svgKey: 'provintia'
+            },
+            zeelandia: {
+                title: '熱蘭遮城（安平古堡）：防禦核心',
+                desc: '荷蘭人在台灣的統治總部與核心軍事要塞。採用當時歐洲最先進的星形稜堡架構，擁有重型火砲與多層火網，是長達九個月圍城戰的最核心戰場。',
+                role: '荷軍最高指揮總部 / 西式稜堡要塞',
+                svgKey: 'zeelandia'
+            }
+        };
+
+        const simSteps = [
+            {
+                title: '階段 1：大潮突襲鹿耳門 (1661/04)',
+                desc: '鄭軍數百艘戰艦順大潮湧入台江內海，順利登陸禾寮港。',
+                arrow1: true, arrow2: false, fire: false
+            },
+            {
+                title: '階段 2：赤崁樓圍困開城 (1661/05)',
+                desc: '鄭軍迅速切斷普羅民遮城水源與糧道，荷守軍開城投降。',
+                arrow1: false, arrow2: true, fire: false
+            },
+            {
+                title: '階段 3：台江海戰擊退援軍 (1661/09)',
+                desc: '巴達維亞荷軍援艦遭風暴與鄭軍小艇靈活包圍圍擊打退。',
+                arrow1: true, arrow2: true, fire: false
+            },
+            {
+                title: '階段 4：總攻烏特勒支碉堡 (1662/01)',
+                desc: '鄭軍於高地架設重砲轟塌烏特勒支碉堡，熱蘭遮城大勢已去。',
+                arrow1: false, arrow2: false, fire: true
+            }
+        ];
+
+        // 準星游標跟隨與控制器
+        function initCursorSystem() {
+            const cursor = document.getElementById('weapon-cursor');
+            if (!cursor) return;
+
+            document.addEventListener('mousemove', (e) => {
+                cursor.classList.remove('opacity-0');
+                cursor.classList.add('opacity-100');
+                cursor.style.left = `${e.clientX}px`;
+                cursor.style.top = `${e.clientY}px`;
+            });
+
+            document.addEventListener('mouseleave', () => {
+                cursor.classList.add('opacity-0');
+                cursor.classList.remove('opacity-100');
+            });
+
+            // 準星樣式切換
+            const weaponBtn = document.getElementById('weapon-toggle-btn');
+            const weaponSvg = document.getElementById('weapon-svg');
+            const weaponBtnText = document.getElementById('weapon-btn-text');
+
+            if (weaponBtn) {
+                weaponBtn.addEventListener('click', () => {
+                    playClickSound();
+                    weaponStyle = (weaponStyle === 0) ? 1 : 0;
+                    
+                    if (weaponStyle === 0) {
+                        weaponBtnText.innerText = '準星: 明鄭鳥銃';
+                        weaponSvg.innerHTML = `
+                            <circle cx="50" cy="50" r="38" stroke="#A64B3C" stroke-width="1.5" stroke-dasharray="4 2"/>
+                            <circle cx="50" cy="50" r="20" stroke="#A64B3C" stroke-width="1"/>
+                            <circle cx="50" cy="50" r="3" fill="#A64B3C"/>
+                            <line x1="50" y1="8" x2="50" y2="24" stroke="#A64B3C" stroke-width="2"/>
+                            <line x1="50" y1="76" x2="50" y2="92" stroke="#A64B3C" stroke-width="2"/>
+                            <line x1="8" y1="50" x2="24" y2="50" stroke="#A64B3C" stroke-width="2"/>
+                            <line x1="76" y1="50" x2="92" y2="50" stroke="#A64B3C" stroke-width="2"/>
+                        `;
+                    } else {
+                        weaponBtnText.innerText = '準星: 砲兵測距';
+                        weaponSvg.innerHTML = `
+                            <rect x="15" y="15" width="70" height="70" stroke="#858B76" stroke-width="1.5" fill="none"/>
+                            <circle cx="50" cy="50" r="30" stroke="#A64B3C" stroke-width="1.5"/>
+                            <circle cx="50" cy="50" r="2" fill="#A64B3C"/>
+                            <line x1="50" y1="10" x2="50" y2="90" stroke="#858B76" stroke-width="1" stroke-dasharray="2 2"/>
+                            <line x1="10" y1="50" x2="90" y2="50" stroke="#858B76" stroke-width="1" stroke-dasharray="2 2"/>
+                        `;
+                    }
+                });
+            }
+        }
+
+        function playClickSound() {
+            if (!soundEnabled) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(440, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(880, ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.08, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.05);
+            } catch (e) {}
+        }
+
+        function createCannonParticle(x, y) {
+            if (!soundEnabled) return;
+            for (let i = 0; i < 6; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                document.body.appendChild(particle);
+
+                const size = Math.random() * 6 + 4;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.backgroundColor = Math.random() > 0.5 ? '#A64B3C' : '#49372D';
+                particle.style.left = `${x}px`;
+                particle.style.top = `${y}px`;
+
+                const destinationX = x + (Math.random() - 0.5) * 60;
+                const destinationY = y + (Math.random() - 0.5) * 60;
+
+                anime({
+                    targets: particle,
+                    left: destinationX,
+                    top: destinationY,
+                    opacity: [1, 0],
+                    scale: [1, 0],
+                    duration: 500,
+                    easing: 'easeOutExpo',
+                    complete: () => particle.remove()
+                });
+            }
+        }
+
+        // 初始化戰役據點頁籤 (具備完全響應式排版)
+        function initLocationTabs() {
+            const buttons = document.querySelectorAll('.loc-tab-btn');
+            
+            buttons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    playClickSound();
+                    const locKey = btn.dataset.loc;
+                    const locData = locationsData[locKey];
+                    if (!locData) return;
+
+                    buttons.forEach(b => {
+                        b.classList.remove('bg-[#A64B3C]', 'text-[#FAF6EE]', 'border-[#A64B3C]');
+                        b.classList.add('bg-[#FAF6EE]', 'text-[#49372D]', 'border-[#D8CCB9]');
+                    });
+                    btn.classList.add('bg-[#A64B3C]', 'text-[#FAF6EE]', 'border-[#A64B3C]');
+
+                    document.getElementById('loc-title').innerText = locData.title;
+                    document.getElementById('loc-desc').innerText = locData.desc;
+                    document.getElementById('loc-role').innerText = locData.role;
+                    document.getElementById('loc-img-container').innerHTML = vectorArtworks[locData.svgKey] || '';
+                });
+            });
+
+            if (buttons.length > 0) buttons[0].click();
+        }
+
+        function initSimulator() {
+            const btns = document.querySelectorAll('.sim-btn');
+            btns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    playClickSound();
+                    const stepIdx = parseInt(btn.dataset.step);
+                    const stepData = simSteps[stepIdx];
+
+                    btns.forEach(b => {
+                        b.classList.remove('bg-[#A64B3C]', 'text-white', 'border-[#A64B3C]');
+                        b.classList.add('bg-[#FAF6EE]', 'text-[#49372D]', 'border-[#D8CCB9]');
+                    });
+                    btn.classList.add('bg-[#A64B3C]', 'text-white', 'border-[#A64B3C]');
+                    btn.classList.remove('bg-[#FAF6EE]', 'text-[#49372D]');
+
+                    document.getElementById('sim-status-title').innerText = stepData.title;
+                    document.getElementById('sim-status-desc').innerText = stepData.desc;
+
+                    const arrow1 = document.getElementById('sim-arrow-1');
+                    const arrow2 = document.getElementById('sim-arrow-2');
+                    const fire = document.getElementById('sim-cannon-fire');
+
+                    anime({
+                        targets: [arrow1, arrow2, fire],
+                        opacity: 0,
+                        duration: 200,
+                        easing: 'easeOutQuad',
+                        complete: () => {
+                            if (stepData.arrow1) {
+                                anime({
+                                    targets: arrow1,
+                                    opacity: [0, 1],
+                                    strokeDashoffset: [20, 0],
+                                    duration: 600,
+                                    easing: 'easeOutQuad'
+                                });
+                            }
+                            if (stepData.arrow2) {
+                                anime({
+                                    targets: arrow2,
+                                    opacity: [0, 1],
+                                    strokeDashoffset: [20, 0],
+                                    duration: 600,
+                                    easing: 'easeOutQuad'
+                                });
+                            }
+                            if (stepData.fire) {
+                                anime({
+                                    targets: fire,
+                                    opacity: [0, 0.8, 0.2, 0.8, 0],
+                                    scale: [0.5, 1.5, 1],
+                                    duration: 800,
+                                    easing: 'easeOutQuad'
+                                });
+                            }
+                        }
+                    });
+                });
+            });
+        }
+
+        function initUnitCardFlip() {
+            const cards = document.querySelectorAll('.unit-card');
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    playClickSound();
+                    const inner = card.querySelector('.card-inner');
+                    inner.classList.toggle('rotate-y-180');
+                });
+            });
+        }
+
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName !== 'BUTTON' && e.target.tagName !== 'A') {
+                createCannonParticle(e.clientX, e.clientY);
+            }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            renderNodes();
+            updateTimelineStage(currentIndex, false);
+            bindEvents();
+            initLocationTabs();
+            initSimulator();
+            initUnitCardFlip();
+            initCursorSystem();
+            initCompassRotation();
+            initStatsCounter();
+
+            // 音效切換按鈕
+            const soundBtn = document.getElementById('sound-toggle-btn');
+            const soundText = document.getElementById('sound-text');
+            if (soundBtn) {
+                soundBtn.addEventListener('click', () => {
+                    soundEnabled = !soundEnabled;
+                    soundText.innerText = soundEnabled ? '音效: 開' : '音效: 關';
+                });
+            }
+        });
+
+        function initCompassRotation() {
+            anime({
+                targets: '#rotating-compass',
+                rotate: '1turn',
+                duration: 60000,
+                easing: 'linear',
+                loop: true
+            });
+        }
+
+        function initStatsCounter() {
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const targets = entry.target.querySelectorAll('.counter-num');
+                        targets.forEach(el => {
+                            const targetVal = parseInt(el.getAttribute('data-target'));
+                            const obj = { val: 0 };
+                            anime({
+                                targets: obj,
+                                val: targetVal,
+                                round: 1,
+                                duration: 2000,
+                                easing: 'easeOutExpo',
+                                update: function() {
+                                    el.innerText = obj.val.toLocaleString();
+                                }
+                            });
+                        });
+                        counterObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const heroStats = document.querySelector('#hero .grid');
+            if (heroStats) counterObserver.observe(heroStats);
+        }
+
+        function renderNodes() {
+            const container = document.getElementById('timeline-nodes-container');
+            container.innerHTML = '';
+
+            timelineData.forEach((data, index) => {
+                const nodeBtn = document.createElement('button');
+                nodeBtn.setAttribute('role', 'tab');
+                nodeBtn.className = `timeline-node p-4 rounded-lg border text-left transition-all duration-300 relative bg-[#FAF6EE] border-[#D8CCB9] hover:border-[#A64B3C] cursor-pointer group`;
+                nodeBtn.dataset.index = index;
+
+                nodeBtn.innerHTML = `
+                    <div class="flex items-center space-x-2">
+                        <span class="w-3 h-3 rounded-full border-2 border-[#A64B3C] bg-[#FAF6EE] group-hover:bg-[#A64B3C] transition-colors node-dot"></span>
+                        <span class="text-xs font-bold text-[#858B76] block">${data.year}</span>
+                    </div>
+                    <div class="text-xs md:text-sm font-bold text-[#49372D] mt-1 line-clamp-1">${data.title}</div>
+                `;
+
+                nodeBtn.addEventListener('click', () => {
+                    if (currentIndex !== index) {
+                        playClickSound();
+                        selectStage(index);
+                    }
+                });
+
+                container.appendChild(nodeBtn);
+            });
+        }
+
+        function selectStage(index) {
+            if (isAnimating) return;
+            isAnimating = true;
+
+            const contentBox = document.getElementById('stage-content-box');
+            closeDeepDivePanel();
+
+            anime({
+                targets: contentBox,
+                opacity: [1, 0],
+                translateY: [0, -10],
+                duration: 250,
+                easing: 'easeInQuad',
+                complete: () => {
+                    currentIndex = index;
+                    updateTimelineStage(currentIndex, true);
+
+                    anime({
+                        targets: contentBox,
+                        opacity: [0, 1],
+                        translateY: [10, 0],
+                        duration: 350,
+                        easing: 'easeOutQuad',
+                        complete: () => {
+                            isAnimating = false;
+                        }
+                    });
+                }
+            });
+        }
+
+        function updateTimelineStage(index, animateHighlight = true) {
+            const data = timelineData[index];
+
+            document.getElementById('stage-image-container').innerHTML = vectorArtworks[data.svgKey] || '';
+            document.getElementById('stage-badge').innerText = data.badge;
+            document.getElementById('stage-step-num').innerText = data.stepNum;
+            document.getElementById('stage-date').innerText = data.year;
+            document.getElementById('stage-title').innerText = data.title;
+            document.getElementById('stage-desc').innerText = data.desc;
+            document.getElementById('stage-img-caption').innerText = data.caption;
+            document.getElementById('current-index-display').innerText = index + 1;
+
+            const deepDiveList = document.getElementById('deep-dive-list');
+            deepDiveList.innerHTML = data.deepDives.map(item => `
+                <li class="bg-[#FAF6EE] p-3 rounded border border-[#D8CCB9] hover:border-[#A64B3C] transition-colors">${item}</li>
+            `).join('');
+
+            document.getElementById('prev-btn').disabled = (index === 0);
+            document.getElementById('next-btn').disabled = (index === timelineData.length - 1);
+
+            const nodes = document.querySelectorAll('.timeline-node');
+            nodes.forEach((node, idx) => {
+                const dot = node.querySelector('.node-dot');
+                const isSelected = (idx === index);
+
+                if (isSelected) {
+                    node.classList.add('border-[#A64B3C]', 'bg-[#EAE0D0]', 'shadow-md');
+                    node.classList.remove('border-[#D8CCB9]', 'bg-[#FAF6EE]');
+                    dot.classList.add('bg-[#A64B3C]');
+                } else {
+                    node.classList.remove('border-[#A64B3C]', 'bg-[#EAE0D0]', 'shadow-md');
+                    node.classList.add('border-[#D8CCB9]', 'bg-[#FAF6EE]');
+                    dot.classList.remove('bg-[#A64B3C]');
+                }
+            });
+        }
+
+        function closeDeepDivePanel() {
+            const panel = document.getElementById('deep-dive-panel');
+            const icon = document.getElementById('deep-dive-icon');
+            if (panel) panel.classList.add('hidden');
+            if (icon) icon.classList.remove('rotate-180');
+        }
+
+        function toggleDeepDivePanel() {
+            playClickSound();
+            const panel = document.getElementById('deep-dive-panel');
+            const icon = document.getElementById('deep-dive-icon');
+            const isHidden = panel.classList.contains('hidden');
+
+            if (isHidden) {
+                panel.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+                anime({
+                    targets: panel,
+                    opacity: [0, 1],
+                    translateY: [-10, 0],
+                    duration: 300,
+                    easing: 'easeOutQuad'
+                });
+            } else {
+                closeDeepDivePanel();
+            }
+        }
+
+        function bindEvents() {
+            document.getElementById('deep-dive-btn').addEventListener('click', toggleDeepDivePanel);
+
+            document.getElementById('prev-btn').addEventListener('click', () => {
+                if (currentIndex > 0) selectStage(currentIndex - 1);
+            });
+
+            document.getElementById('next-btn').addEventListener('click', () => {
+                if (currentIndex < timelineData.length - 1) selectStage(currentIndex + 1);
+            });
+        }
+    </script>
+</body>
+</html>
